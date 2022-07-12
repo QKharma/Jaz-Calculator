@@ -10,7 +10,7 @@ interface TimeInputProps {
 const TimeInput = (props: TimeInputProps) => {
   return (
     <div className='flex flex-row justify-end lg:mr-20'>
-      <div className='text-white mr-10 whitespace-nowrap'>{props.name}</div>
+      <p className='text-white mr-10 whitespace-nowrap'>{props.name}</p>
       <input
         className='appearance-none bg-white rounded-sm py-1 px-8 min-w-max'
         type={'time'}
