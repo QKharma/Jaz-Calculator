@@ -18,7 +18,16 @@ const Calculator = () => {
   }
 
   useEffect(() => {
-    if (morning != 0 && lunchStart != 0 && lunchEnd != 0 && endOfWork != 0) {
+    loadTimes(setMorning, setLunchStart, setLunchEnd, setEndOfWork)
+  }, [])
+
+  useEffect(() => {
+    if (
+      morning !== 0 &&
+      lunchStart !== 0 &&
+      lunchEnd !== 0 &&
+      endOfWork !== 0
+    ) {
       let calcOvertime =
         lunchStart - morning + (endOfWork - lunchEnd) - 28800000
       if (calcOvertime >= 0) {
@@ -30,6 +39,21 @@ const Calculator = () => {
     } else {
       setOvertimeSign('+')
       setOvertime('00:00')
+    }
+  }, [morning, lunchStart, lunchEnd, endOfWork])
+
+  useEffect(() => {
+    if (morning !== 0) {
+      localStorage.setItem('morning', morning.toString())
+    }
+    if (lunchStart !== 0) {
+      localStorage.setItem('lunchStart', lunchStart.toString())
+    }
+    if (lunchEnd !== 0) {
+      localStorage.setItem('lunchEnd', lunchEnd.toString())
+    }
+    if (endOfWork !== 0) {
+      localStorage.setItem('endOfWork', endOfWork.toString())
     }
   }, [morning, lunchStart, lunchEnd, endOfWork])
 
@@ -67,6 +91,33 @@ const Calculator = () => {
       </div>
     </div>
   )
+}
+
+const loadTimes = (
+  setMorning: (i: number) => void,
+  setLunchStart: (i: number) => void,
+  setLunchEnd: (i: number) => void,
+  setEndOfWork: (i: number) => void
+) => {
+  let morning = window.localStorage.getItem('morning')
+  let lunchStart = window.localStorage.getItem('lunchStart')
+  let lunchEnd = window.localStorage.getItem('lunchEnd')
+  let endOfWork = window.localStorage.getItem('endOfWork')
+
+  console.log(morning)
+
+  if (morning) {
+    setMorning(parseInt(morning))
+  }
+  if (lunchStart) {
+    setLunchStart(parseInt(lunchStart))
+  }
+  if (lunchEnd) {
+    setLunchEnd(parseInt(lunchEnd))
+  }
+  if (endOfWork) {
+    setEndOfWork(parseInt(endOfWork))
+  }
 }
 
 export default Calculator
