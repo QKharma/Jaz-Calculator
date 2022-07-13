@@ -104,8 +104,6 @@ const loadTimes = (
   let lunchEnd = window.localStorage.getItem('lunchEnd')
   let endOfWork = window.localStorage.getItem('endOfWork')
 
-  console.log(morning)
-
   if (morning) {
     setMorning(parseInt(morning))
   }
