@@ -7,7 +7,8 @@ import {
   useLocation,
 } from 'react-router-dom'
 
-import Calculator from './components/Calculator'
+import LeaveCalculator from './components/LeaveCalculator'
+import LunchInfo from './components/LunchInfo'
 import NavbarButton from './components/NavbarButton'
 import OvertimeCalculator from './components/OvertimeCalculator'
 
@@ -30,7 +31,7 @@ function App() {
                 path='/calculator1'
                 element={<OvertimeCalculator />}
               ></Route>
-              <Route path='/calculator2' element={<Calculator />}></Route>
+              <Route path='/calculator2' element={<LeaveCalculator />}></Route>
             </Routes>
           </div>
         </div>

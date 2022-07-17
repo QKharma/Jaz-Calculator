@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import msToString from '../lib/msToString'
 import TimeInput from './TimeInput'
 
-const Calculator = () => {
+const LeaveCalculator = () => {
   const [morning, setMorning] = useState(0)
   const [lunchStart, setLunchStart] = useState(0)
   const [lunchEnd, setLunchEnd] = useState(0)
@@ -150,4 +150,4 @@ const loadTimes = (
   }
 }
 
-export default Calculator
+export default LeaveCalculator
