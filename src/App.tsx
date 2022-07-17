@@ -8,14 +8,14 @@ import {
 } from 'react-router-dom'
 
 import Calculator from './components/Calculator'
-import Calculator2 from './components/Calculator2'
 import NavbarButton from './components/NavbarButton'
+import OvertimeCalculator from './components/OvertimeCalculator'
 
 function App() {
   return (
     <Router>
       <div className='h-screen'>
-        <nav className='flex flex-col absolute h-full p-3 justify-center space-y-3'>
+        <nav className='flex flex-col absolute h-full p-3 lg:justify-center justify-end space-y-3'>
           <NavbarButton path='/calculator1' icon='clock' />
           <NavbarButton path='/calculator2' icon='clock2' />
         </nav>
@@ -26,8 +26,11 @@ function App() {
           <div className='h-full grid place-items-center'>
             <Routes>
               <Route path='/' element={<Navigate to='/calculator1' />}></Route>
-              <Route path='/calculator1' element={<Calculator />}></Route>
-              <Route path='/calculator2' element={<Calculator2 />}></Route>
+              <Route
+                path='/calculator1'
+                element={<OvertimeCalculator />}
+              ></Route>
+              <Route path='/calculator2' element={<Calculator />}></Route>
             </Routes>
           </div>
         </div>
