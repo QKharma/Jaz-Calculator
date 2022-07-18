@@ -6,10 +6,8 @@ const LeaveCalculator = () => {
   const [morning, setMorning] = useState(0)
   const [lunchStart, setLunchStart] = useState(0)
   const [lunchEnd, setLunchEnd] = useState(0)
-  const [endOfWork, setEndOfWork] = useState(0)
-  const [workTime, setWorkTime] = useState(0)
-  const [overtime, setOvertime] = useState('00:00')
-  const [overtimeSign, setOvertimeSign] = useState<'+' | '-'>('+')
+  const [goalWorkTime, setgoalWorkTime] = useState(0)
+  const [leaveTime, setLeaveTime] = useState('00:00')
   const [lunchTime, setLunchTime] = useState(0)
   const [lunchTimeMin, setLunchTimeMin] = useState(0)
 
@@ -17,11 +15,11 @@ const LeaveCalculator = () => {
     setMorning(0)
     setLunchStart(0)
     setLunchEnd(0)
-    setEndOfWork(0)
+    setgoalWorkTime(0)
   }
 
   useEffect(() => {
-    loadTimes(setMorning, setLunchStart, setLunchEnd, setEndOfWork)
+    loadTimes(setMorning, setLunchStart, setLunchEnd, setgoalWorkTime)
   }, [])
 
   useEffect(() => {
@@ -29,38 +27,32 @@ const LeaveCalculator = () => {
       morning !== 0 &&
       lunchStart !== 0 &&
       lunchEnd !== 0 &&
-      endOfWork !== 0
+      goalWorkTime !== 0
     ) {
-      let calcTime = lunchStart - morning + endOfWork - lunchEnd
-      let calcOvertime = calcTime - 28800000
-      let lunchTime = lunchEnd - lunchStart
+      let calcLunchTime = lunchEnd - lunchStart
       let calcLunchTimeMin = 0
-      if (calcTime <= 18000000) {
+      if (goalWorkTime <= 18000000) {
         setLunchTimeMin(0)
         calcLunchTimeMin = 0
-      } else if (calcTime > 18000000 && calcTime < 32400000) {
+      } else if (goalWorkTime > 18000000 && goalWorkTime < 32400000) {
         setLunchTimeMin(1800000)
         calcLunchTimeMin = 1800000
       } else {
         setLunchTimeMin(3600000)
         calcLunchTimeMin = 3600000
       }
-      if (calcOvertime >= 0) {
-        setOvertimeSign('+')
-      } else {
-        setOvertimeSign('-')
+      if (calcLunchTime < calcLunchTimeMin) {
+        calcLunchTime = calcLunchTimeMin
       }
-      if (lunchTime < calcLunchTimeMin) {
-        calcOvertime -= calcLunchTimeMin - lunchTime
-      }
-      setLunchTime(lunchTime)
-      setWorkTime(calcTime)
-      setOvertime(msToString(calcOvertime))
+      let calcTime = lunchStart - morning
+      let calcLeaveTime = lunchStart + calcLunchTime + goalWorkTime - calcTime
+      console.log(calcLunchTime, calcLunchTimeMin)
+      setLunchTime(calcLunchTime)
+      setLeaveTime(msToString(calcLeaveTime))
     } else {
-      setOvertimeSign('+')
-      setOvertime('00:00')
+      setLeaveTime('00:00')
     }
-  }, [morning, lunchStart, lunchEnd, endOfWork])
+  }, [morning, lunchStart, lunchEnd, goalWorkTime])
 
   useEffect(() => {
     if (morning !== 0) {
@@ -72,10 +64,10 @@ const LeaveCalculator = () => {
     if (lunchEnd !== 0) {
       localStorage.setItem('lunchEnd', lunchEnd.toString())
     }
-    if (endOfWork !== 0) {
-      localStorage.setItem('endOfWork', endOfWork.toString())
+    if (goalWorkTime !== 0) {
+      localStorage.setItem('goalWorkTime', goalWorkTime.toString())
     }
-  }, [morning, lunchStart, lunchEnd, endOfWork])
+  }, [morning, lunchStart, lunchEnd, goalWorkTime])
 
   return (
     <div className='lg:space-y-10 divide-y-[1px]'>
@@ -87,30 +79,25 @@ const LeaveCalculator = () => {
             setTime={setLunchStart}
             name='Lunch start'
           />
-          <TimeInput time={lunchEnd} setTime={setLunchEnd} name='Lunch end' />
-          <TimeInput
-            time={endOfWork}
-            setTime={setEndOfWork}
-            name='End of Work'
-          />
+          <div className='divide-y-[1px]'>
+            <div className='pb-2.5'>
+              <TimeInput
+                time={lunchEnd}
+                setTime={setLunchEnd}
+                name='Lunch end'
+              />
+            </div>
+            <div className='pt-2.5'>
+              <TimeInput
+                time={goalWorkTime}
+                setTime={setgoalWorkTime}
+                name='Goal work time'
+              />
+            </div>
+          </div>
         </div>
         <div className='flex flex-col items-center justify-center font-semibold basis-1/2'>
-          <p className='pl-10 text-pink-500 mb-2'>
-            Total work time:{' '}
-            <span className='text-violet-500'>{msToString(workTime)}</span>
-          </p>
-          <p className='text-pink-500 text-7xl'>
-            {overtimeSign}
-            {overtime}
-          </p>
-          <p className='pl-10 mt-5 text-pink-500'>
-            Lunch time:{' '}
-            <span className='text-purple-500'>{msToString(lunchTime)}</span>
-          </p>
-          <p className='pl-10 text-pink-500'>
-            Min. lunch time:{' '}
-            <span className='text-purple-500'>{msToString(lunchTimeMin)}</span>
-          </p>
+          <p className='text-pink-500 text-7xl'>{leaveTime}</p>
         </div>
       </div>
       <div className='flex flex-row justify-center'>
@@ -129,12 +116,12 @@ const loadTimes = (
   setMorning: (i: number) => void,
   setLunchStart: (i: number) => void,
   setLunchEnd: (i: number) => void,
-  setEndOfWork: (i: number) => void
+  setgoalWorkTime: (i: number) => void
 ) => {
   let morning = window.localStorage.getItem('morning')
   let lunchStart = window.localStorage.getItem('lunchStart')
   let lunchEnd = window.localStorage.getItem('lunchEnd')
-  let endOfWork = window.localStorage.getItem('endOfWork')
+  let goalWorkTime = window.localStorage.getItem('goalWorkTime')
 
   if (morning) {
     setMorning(parseInt(morning))
@@ -145,8 +132,8 @@ const loadTimes = (
   if (lunchEnd) {
     setLunchEnd(parseInt(lunchEnd))
   }
-  if (endOfWork) {
-    setEndOfWork(parseInt(endOfWork))
+  if (goalWorkTime) {
+    setgoalWorkTime(parseInt(goalWorkTime))
   }
 }
 

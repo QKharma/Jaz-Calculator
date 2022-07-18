@@ -17,8 +17,8 @@ function App() {
     <Router>
       <div className='h-screen'>
         <nav className='flex flex-col absolute h-full p-3 lg:justify-center justify-end space-y-3'>
-          <NavbarButton path='/calculator1' icon='clock' />
-          <NavbarButton path='/calculator2' icon='clock2' />
+          <NavbarButton path='/OvertimeCalculator' icon='clock' />
+          <NavbarButton path='/LeaveCalculator' icon='clock2' />
         </nav>
         <div className='bg-gray-800 h-full p-3 flex flex-col items-center'>
           <h1 className='text-white text-4xl font-semibold grid place-items-center'>
@@ -26,12 +26,18 @@ function App() {
           </h1>
           <div className='h-full grid place-items-center'>
             <Routes>
-              <Route path='/' element={<Navigate to='/calculator1' />}></Route>
               <Route
-                path='/calculator1'
+                path='/'
+                element={<Navigate to='/OvertimeCalculator' />}
+              ></Route>
+              <Route
+                path='/OvertimeCalculator'
                 element={<OvertimeCalculator />}
               ></Route>
-              <Route path='/calculator2' element={<LeaveCalculator />}></Route>
+              <Route
+                path='/LeaveCalculator'
+                element={<LeaveCalculator />}
+              ></Route>
             </Routes>
           </div>
         </div>

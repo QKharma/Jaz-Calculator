@@ -72,7 +72,6 @@ const OvertimeCalculator = () => {
 
   return (
     <div className='space-y-10'>
-      <LunchInfo />
       <div className='lg:space-y-10 divide-y-[1px]'>
         <div className='grid grid-rows-2 lg:grid-cols-2 lg:grid-rows-none'>
           <div className='flex flex-col space-y-5 basis-1/2'>
