@@ -17,8 +17,16 @@ function App() {
     <Router>
       <div className='h-screen'>
         <nav className='flex flex-col absolute h-full p-3 lg:justify-center justify-end space-y-3'>
-          <NavbarButton path='/OvertimeCalculator' icon='clock' />
-          <NavbarButton path='/LeaveCalculator' icon='clock2' />
+          <NavbarButton
+            name='Overtime Calculator'
+            path='/OvertimeCalculator'
+            icon='clock'
+          />
+          <NavbarButton
+            name='Leave Time Calculator'
+            path='/LeaveCalculator'
+            icon='clock2'
+          />
         </nav>
         <div className='bg-gray-800 h-full p-3 flex flex-col items-center'>
           <h1 className='text-white text-4xl font-semibold grid place-items-center'>
