@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
+import getLocalStorageNumber from '../lib/getLocalStorageNumber'
+import getLunchTimeMin from '../lib/getLunchTimeMin'
 import msToString from '../lib/msToString'
-import LunchInfo from './LunchInfo'
 import TimeInput from './TimeInput'
 
 const OvertimeCalculator = () => {
@@ -9,69 +10,61 @@ const OvertimeCalculator = () => {
   const [lunchEnd, setLunchEnd] = useState(0)
   const [endOfWork, setEndOfWork] = useState(0)
   const [workTime, setWorkTime] = useState(0)
-  const [overtime, setOvertime] = useState('00:00')
-  const [overtimeSign, setOvertimeSign] = useState<'+' | '-'>('+')
+  const [overtime, setOvertime] = useState(0)
   const [lunchTime, setLunchTime] = useState(0)
-  const [lunchTimeMin, setLunchTimeMin] = useState(0)
 
   const clearTimes = () => {
     setMorning(0)
     setLunchStart(0)
     setLunchEnd(0)
     setEndOfWork(0)
+    setLunchTime(0)
+    setWorkTime(0)
+    setOvertime(0)
   }
 
-  useEffect(() => {
-    loadTimes(setMorning, setLunchStart, setLunchEnd, setEndOfWork)
-  }, [])
-
-  useEffect(() => {
+  const showOvertime = () => {
     if (
       morning !== 0 &&
       lunchStart !== 0 &&
       lunchEnd !== 0 &&
       endOfWork !== 0
     ) {
-      let calcTime = lunchStart - morning + endOfWork - lunchEnd
-      let calcOvertime = calcTime - 28800000
+      let workTime = lunchStart - morning + endOfWork - lunchEnd
       let lunchTime = lunchEnd - lunchStart
-      let calcLunchTimeMin = 0
-      if (calcTime <= 18000000) {
-        setLunchTimeMin(0)
-        calcLunchTimeMin = 0
-      } else if (calcTime > 18000000 && calcTime < 32400000) {
-        setLunchTimeMin(1800000)
-        calcLunchTimeMin = 1800000
-      } else {
-        setLunchTimeMin(3600000)
-        calcLunchTimeMin = 3600000
+      let lunchTimeMin = getLunchTimeMin(workTime)
+      if (lunchTime < lunchTimeMin) {
+        lunchTime = lunchTimeMin
       }
-      if (calcOvertime >= 0) {
-        setOvertimeSign('+')
-      } else {
-        setOvertimeSign('-')
-      }
-      if (lunchTime < calcLunchTimeMin) {
-        calcOvertime -= calcLunchTimeMin - lunchTime
-      }
-      if (lunchTime < calcLunchTimeMin) {
-        lunchTime = calcLunchTimeMin
-      }
+      workTime = endOfWork - morning - lunchTime
+      let calcOvertime = workTime - 28800000
       setLunchTime(lunchTime)
-      setWorkTime(calcTime)
-      setOvertime(msToString(calcOvertime))
+      setWorkTime(workTime)
+      setOvertime(calcOvertime)
     } else {
-      setOvertimeSign('+')
-      setOvertime('00:00')
+      setOvertime(0)
     }
-  }, [morning, lunchStart, lunchEnd, endOfWork])
+  }
 
   useEffect(() => {
-    saveTimes(morning, lunchStart, lunchEnd, endOfWork)
+    setMorning(getLocalStorageNumber('morning'))
+    setLunchStart(getLocalStorageNumber('lunchStart'))
+    setLunchEnd(getLocalStorageNumber('lunchEnd'))
+    setEndOfWork(getLocalStorageNumber('endOfWork'))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => {
+    showOvertime()
+    localStorage.setItem('morning', morning.toString())
+    localStorage.setItem('lunchStart', lunchStart.toString())
+    localStorage.setItem('lunchEnd', lunchEnd.toString())
+    localStorage.setItem('endOfWork', endOfWork.toString())
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [morning, lunchStart, lunchEnd, endOfWork])
 
   return (
-    <div className='space-y-10'>
+    <div className='space-y-10 w-100'>
       <div className='lg:space-y-10 divide-y-[1px]'>
         <div className='grid grid-rows-2 lg:grid-cols-2 lg:grid-rows-none'>
           <div className='flex flex-col space-y-5 basis-1/2'>
@@ -90,7 +83,7 @@ const OvertimeCalculator = () => {
           </div>
           <div className='flex flex-col items-center justify-center font-semibold basis-1/2'>
             <div className='flex flex-col items-center'>
-              <p className='pl-12 text-violet-500 text-3xl space-x-5'>
+              <p className='pl-12 text-violet-500 text-3xl space-x-6'>
                 <span>Work</span> <span>Lunch</span>
               </p>
               <p className='pl-10 text-violet-500 text-3xl space-x-8'>
@@ -99,17 +92,17 @@ const OvertimeCalculator = () => {
               </p>
             </div>
             <p className='text-pink-500 text-7xl'>
-              {overtimeSign}
-              {overtime}
+              {overtime >= 0 ? '+' : '-'}
+              {msToString(overtime)}
             </p>
           </div>
         </div>
         <div className='flex flex-row justify-center'>
           <button
-            className='bg-amber-400 rounded-sm p-1 mt-5'
+            className='bg-amber-400 rounded-sm p-2 px-3 mt-5'
             onClick={clearTimes}
           >
-            <span className='font-semibold'>Reset</span>
+            <span className='font-semibold text-xl'>Reset</span>
           </button>
         </div>
       </div>
@@ -117,48 +110,4 @@ const OvertimeCalculator = () => {
   )
 }
 
-const loadTimes = (
-  setMorning: (i: number) => void,
-  setLunchStart: (i: number) => void,
-  setLunchEnd: (i: number) => void,
-  setEndOfWork: (i: number) => void
-) => {
-  let morning = window.localStorage.getItem('morning')
-  let lunchStart = window.localStorage.getItem('lunchStart')
-  let lunchEnd = window.localStorage.getItem('lunchEnd')
-  let endOfWork = window.localStorage.getItem('endOfWork')
-
-  if (morning) {
-    setMorning(parseInt(morning))
-  }
-  if (lunchStart) {
-    setLunchStart(parseInt(lunchStart))
-  }
-  if (lunchEnd) {
-    setLunchEnd(parseInt(lunchEnd))
-  }
-  if (endOfWork) {
-    setEndOfWork(parseInt(endOfWork))
-  }
-}
-
-const saveTimes = (
-  morning: number,
-  lunchStart: number,
-  lunchEnd: number,
-  endOfWork: number
-) => {
-  if (morning !== 0) {
-    localStorage.setItem('morning', morning.toString())
-  }
-  if (lunchStart !== 0) {
-    localStorage.setItem('lunchStart', lunchStart.toString())
-  }
-  if (lunchEnd !== 0) {
-    localStorage.setItem('lunchEnd', lunchEnd.toString())
-  }
-  if (endOfWork !== 0) {
-    localStorage.setItem('endOfWork', endOfWork.toString())
-  }
-}
 export default OvertimeCalculator

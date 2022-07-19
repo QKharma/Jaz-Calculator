@@ -16,10 +16,10 @@ const NavbarButton = (props: NavbarButtonProps) => {
   const location = useLocation()
 
   return (
-    <div className='flex flex-row justify-between'>
+    <div className='flex flex-row justify-between w-[310px]'>
       <Link
         to={props.path}
-        className='hover:bg-pink-100 hover:bg-opacity-10 rounded-xl flex flex-row'
+        className='hover:bg-pink-100 hover:bg-opacity-10 rounded-xl flex flex-row grow'
       >
         {icons[props.icon]}
         <div className='grid place-items-center px-2'>
