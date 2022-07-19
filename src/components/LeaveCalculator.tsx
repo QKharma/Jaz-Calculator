@@ -60,20 +60,24 @@ const LeaveCalculator = () => {
     <div className='lg:space-y-10 divide-y-[1px]'>
       <div className='grid grid-rows-2 lg:grid-cols-2 lg:grid-rows-none'>
         <div className='flex flex-col space-y-5 basis-1/2'>
-          <TimeInput time={morning} setTime={setMorning} name='Morning' />
+          <TimeInput time={morning} setTime={setMorning} name='Morning 🌄' />
           <TimeInput
             time={lunchStart}
             setTime={setLunchStart}
-            name='Lunch start'
+            name='Lunch start 🍲'
           />
           <div>
-            <TimeInput time={lunchEnd} setTime={setLunchEnd} name='Lunch end' />
+            <TimeInput
+              time={lunchEnd}
+              setTime={setLunchEnd}
+              name='Lunch end ⛅️'
+            />
           </div>
           <div>
             <TimeInput
               time={goalWorkTime}
               setTime={setgoalWorkTime}
-              name='Goal work time'
+              name='Goal work time ⏰'
               color='blue'
               bold
             />

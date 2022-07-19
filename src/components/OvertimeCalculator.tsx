@@ -68,17 +68,21 @@ const OvertimeCalculator = () => {
       <div className='lg:space-y-10 divide-y-[1px]'>
         <div className='grid grid-rows-2 lg:grid-cols-2 lg:grid-rows-none'>
           <div className='flex flex-col space-y-5 basis-1/2'>
-            <TimeInput time={morning} setTime={setMorning} name='Morning' />
+            <TimeInput time={morning} setTime={setMorning} name='Morning 🌄' />
             <TimeInput
               time={lunchStart}
               setTime={setLunchStart}
-              name='Lunch start'
+              name='Lunch start 🍲'
             />
-            <TimeInput time={lunchEnd} setTime={setLunchEnd} name='Lunch end' />
+            <TimeInput
+              time={lunchEnd}
+              setTime={setLunchEnd}
+              name='Lunch end ⛅️'
+            />
             <TimeInput
               time={endOfWork}
               setTime={setEndOfWork}
-              name='End of Work'
+              name='End of Work 🍻'
             />
           </div>
           <div className='flex flex-col items-center justify-center font-semibold basis-1/2'>
