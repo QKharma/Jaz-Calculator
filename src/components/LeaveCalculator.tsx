@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
-import getLocalStorageNumber from '../lib/getLocalStorageNumber'
 import getLunchTimeMin from '../lib/getLunchTimeMin'
+import {
+  getLocalStorageNumber,
+  setLocalStorageNumber,
+} from '../lib/localStorage'
 import msToString from '../lib/msToString'
 import TimeInput from './TimeInput'
 
@@ -17,6 +20,10 @@ const LeaveCalculator = () => {
     setLunchEnd(0)
     setgoalWorkTime(0)
     setLeaveTime(0)
+    setLocalStorageNumber('morning', 0, true)
+    setLocalStorageNumber('lunchStart', 0, true)
+    setLocalStorageNumber('lunchEnd', 0, true)
+    setLocalStorageNumber('goalWorkTime', 0, true)
   }
 
   const showLeaveTime = () => {
@@ -43,16 +50,16 @@ const LeaveCalculator = () => {
     setMorning(getLocalStorageNumber('morning'))
     setLunchStart(getLocalStorageNumber('lunchStart'))
     setLunchEnd(getLocalStorageNumber('lunchEnd'))
-    setgoalWorkTime(getLocalStorageNumber('endOfWork'))
+    setgoalWorkTime(getLocalStorageNumber('goalWorkTime'))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
     showLeaveTime()
-    localStorage.setItem('morning', morning.toString())
-    localStorage.setItem('lunchStart', lunchStart.toString())
-    localStorage.setItem('lunchEnd', lunchEnd.toString())
-    localStorage.setItem('goalWorkTime', goalWorkTime.toString())
+    setLocalStorageNumber('morning', morning, false)
+    setLocalStorageNumber('lunchStart', lunchStart, false)
+    setLocalStorageNumber('lunchEnd', lunchEnd, false)
+    setLocalStorageNumber('goalWorkTime', goalWorkTime, false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [morning, lunchStart, lunchEnd, goalWorkTime])
 

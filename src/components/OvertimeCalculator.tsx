@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
-import getLocalStorageNumber from '../lib/getLocalStorageNumber'
 import getLunchTimeMin from '../lib/getLunchTimeMin'
+import {
+  getLocalStorageNumber,
+  setLocalStorageNumber,
+} from '../lib/localStorage'
 import msToString from '../lib/msToString'
 import TimeInput from './TimeInput'
 
@@ -21,6 +24,10 @@ const OvertimeCalculator = () => {
     setLunchTime(0)
     setWorkTime(0)
     setOvertime(0)
+    setLocalStorageNumber('morning', 0, true)
+    setLocalStorageNumber('lunchStart', 0, true)
+    setLocalStorageNumber('lunchEnd', 0, true)
+    setLocalStorageNumber('endOfWork', 0, true)
   }
 
   const showOvertime = () => {
@@ -56,10 +63,10 @@ const OvertimeCalculator = () => {
 
   useEffect(() => {
     showOvertime()
-    localStorage.setItem('morning', morning.toString())
-    localStorage.setItem('lunchStart', lunchStart.toString())
-    localStorage.setItem('lunchEnd', lunchEnd.toString())
-    localStorage.setItem('endOfWork', endOfWork.toString())
+    setLocalStorageNumber('morning', morning, false)
+    setLocalStorageNumber('lunchStart', lunchStart, false)
+    setLocalStorageNumber('lunchEnd', lunchEnd, false)
+    setLocalStorageNumber('endOfWork', endOfWork, false)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [morning, lunchStart, lunchEnd, endOfWork])
 
